@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,6 +12,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApi.DataModels;
+using WebApi.Repository;
 
 namespace WebApi
 {
@@ -28,6 +31,8 @@ namespace WebApi
         {
 
             services.AddControllers();
+            services.AddDbContext<StudentAdminContext>(options=>options.UseSqlServer(Configuration.GetConnectionString("StudentAdminPortal")));
+            services.AddScoped<IStudentRepository, SqlStudentRepository>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });
