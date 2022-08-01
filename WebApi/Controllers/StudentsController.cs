@@ -34,7 +34,19 @@ namespace WebApi.Controllers
                         Email=student.Email,
                         Mobile=student.Mobile,
                         ProfileImage=student.ProfileImage,
-                        GenderId=student.GenderId
+                        GenderId=student.GenderId,
+                        Address=new Address()
+                        {
+                            Id=student.Address.Id,
+                            PhysicalAddress=student.Address.PhysicalAddress,
+                            PostalAddress=student.Address.PostalAddress,
+
+                        },
+                        Gender=new Gender()
+                        {
+                            Id=student.Gender.Id,
+                            Description=student.Gender.Description
+                        }
 
                 });
                 
