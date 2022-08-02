@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,46 +13,49 @@ namespace WebApi.Controllers
     public class StudentsController : Controller
     {
         private readonly IStudentRepository studentRepository;
+        private readonly IMapper mapper;
 
-        public StudentsController(IStudentRepository studentRepository)
+        public  StudentsController(IStudentRepository studentRepository,IMapper mapper)
         {
             this.studentRepository = studentRepository;
+            this.mapper = mapper;
         }
         [HttpGet]
         [Route("[controller]")]
-        public IActionResult GetAllStudent()
+        public async Task< IActionResult> GetAllStudentAsync()
         {
-            var students=studentRepository.GetStudents();
-            var domainModelStudent = new List<Student>();
-            foreach (var student in students)
-            {
-                domainModelStudent.Add(new Student()
-                {
-                        Id=student.Id,
-                        FirstName=student.FirstName,
-                        LastName=student.LastName,
-                        DateOfBirth=student.DateOfBirth,
-                        Email=student.Email,
-                        Mobile=student.Mobile,
-                        ProfileImage=student.ProfileImage,
-                        GenderId=student.GenderId,
-                        Address=new Address()
-                        {
-                            Id=student.Address.Id,
-                            PhysicalAddress=student.Address.PhysicalAddress,
-                            PostalAddress=student.Address.PostalAddress,
+            var students=  await studentRepository.GetStudentsAsync();
+            
+            //var domainModelStudent = new List<Student>();
+            //foreach (var student in students)
+            //{
+            //    domainModelStudent.Add(new Student()
+            //    {
+            //            Id=student.Id,
+            //            FirstName=student.FirstName,
+            //            LastName=student.LastName,
+            //            DateOfBirth=student.DateOfBirth,
+            //            Email=student.Email,
+            //            Mobile=student.Mobile,
+            //            ProfileImage=student.ProfileImage,
+            //            GenderId=student.GenderId,
+            //            Address=new Address()
+            //            {
+            //                Id=student.Address.Id,
+            //                PhysicalAddress=student.Address.PhysicalAddress,
+            //                PostalAddress=student.Address.PostalAddress,
 
-                        },
-                        Gender=new Gender()
-                        {
-                            Id=student.Gender.Id,
-                            Description=student.Gender.Description
-                        }
+            //            },
+            //            Gender=new Gender()
+            //            {
+            //                Id=student.Gender.Id,
+            //                Description=student.Gender.Description
+            //            }
 
-                });
+            //    });
                 
-            }
-            return Ok(domainModelStudent);
+            //}
+            return Ok(mapper.Map<List<Student>>(students));
         }
     }
 }
