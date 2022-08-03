@@ -38,6 +38,12 @@ namespace WebApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });
             });
             services.AddAutoMapper(typeof(Startup).Assembly);
+            services.AddCors(options => {
+                options.AddPolicy("angularApplication",(builder)=>
+                {
+                    builder.WithOrigins("http://localhost:4200").AllowAnyHeader().WithMethods("GET", "POST", "PUT", "DELETE").WithExposedHeaders("*");
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,6 +66,7 @@ namespace WebApi
             {
                 endpoints.MapControllers();
             });
+            app.UseCors("angularApplication");
         }
     }
 }
